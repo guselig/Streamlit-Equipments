@@ -4,7 +4,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 from sqlalchemy import create_engine
 import pyodbc
 
-# Conexão usando SQLAlchemy para melhor integração com Pandas
+# Inicialização da conexão
 def init_connection():
     server = st.secrets["server"]
     database = st.secrets["database"]
@@ -15,7 +15,7 @@ def init_connection():
 
 engine = init_connection()
 
-# Função simplificada para executar queries
+# Função para executar queries
 def run_query(query):
     return pd.read_sql_query(query, engine)
 
@@ -45,13 +45,17 @@ if st.session_state['logged_in']:
     df = run_query("SELECT * FROM Equipments;")
 
     if not df.empty:
-        # Titulo do aplicativo Streamlit
         st.title('Equipment Control')
 
-        # AgGrid para edição de dados
+        # Configuração do AgGrid
         grid_options_builder = GridOptionsBuilder.from_dataframe(df)
-        grid_options_builder.configure_pagination(enabled=True)  # Habilita paginação
-        grid_options_builder.configure_columns(['Equipment', 'Organization'], editable=True)
+        grid_options_builder.configure_pagination(enabled=True)
+        
+        # Configuração da coluna Equipment com dropdown
+        equipment_options = ['R101', 'R102', 'R201', 'R202', 'R203', 'AP101', 'AP102', 'Filtro']
+        grid_options_builder.configure_column("Equipment", cellEditor='agSelectCellEditor', cellEditorParams={'values': equipment_options}, editable=True)
+        grid_options_builder.configure_column("Organization", editable=True)
+
         grid_options = grid_options_builder.build()
 
         grid_response = AgGrid(
@@ -70,7 +74,7 @@ if st.session_state['logged_in']:
             for idx, row in updated_df.iterrows():
                 sql = "UPDATE Equipments SET Equipment = ?, Organization = ? WHERE Resources = ?"
                 params = (row['Equipment'], row['Organization'], row['Resources'])
-                with engine.begin() as conn:  # Garantindo que a conexão seja fechada após o commit
+                with engine.begin() as conn:
                     conn.execute(sql, params)
             st.success('Changes saved successfully!')
         else:
