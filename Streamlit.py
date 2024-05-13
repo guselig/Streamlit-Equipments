@@ -53,8 +53,9 @@ if st.session_state['logged_in']:
         
         # Configuração da coluna Equipment com dropdown
         equipment_options = ['R101', 'R102', 'R201', 'R202', 'R203', 'AP101', 'AP102', 'Filtro']
+        organization_options = ['Macaé','NSR']
         grid_options_builder.configure_column("Equipment", cellEditor='agSelectCellEditor', cellEditorParams={'values': equipment_options}, editable=True)
-        grid_options_builder.configure_column("Organization", editable=True)
+        grid_options_builder.configure_column("Organization", cellEditor='agSelectCellEditor', cellEditorParams={'values': organization_options}, editable=True)
 
         grid_options = grid_options_builder.build()
 
