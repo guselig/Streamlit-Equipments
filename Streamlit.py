@@ -51,7 +51,7 @@ if st.session_state['logged_in']:
         # AgGrid para edição de dados
         grid_options_builder = GridOptionsBuilder.from_dataframe(df)
         grid_options_builder.configure_pagination(enabled=True)  # Habilita paginação
-        grid_options_builder.configure_columns(['Equipamento', 'Organization'], editable=True)
+        grid_options_builder.configure_columns(['Equipment', 'Organization'], editable=True)
         grid_options = grid_options_builder.build()
 
         grid_response = AgGrid(
@@ -68,8 +68,8 @@ if st.session_state['logged_in']:
 
         if st.button('Save Changes to Database'):
             for idx, row in updated_df.iterrows():
-                sql = "UPDATE Equipments SET Equipamento = ?, Organization = ? WHERE Resources = ?"
-                params = (row['Equipamento'], row['Organization'], row['Resources'])
+                sql = "UPDATE Equipments SET Equipment = ?, Organization = ? WHERE Resources = ?"
+                params = (row['Equipment'], row['Organization'], row['Resources'])
                 with engine.begin() as conn:  # Garantindo que a conexão seja fechada após o commit
                     conn.execute(sql, params)
             st.success('Changes saved successfully!')
