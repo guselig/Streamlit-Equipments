@@ -43,47 +43,73 @@ if st.sidebar.button("Login"):
 # Restante da aplicação após login
 if st.session_state['logged_in']:
     df = run_query("SELECT * FROM Equipments;")
+    df2 = run_query("SELECT * FROM Capacities;")
 
-    if not df.empty:
-        st.title('Equipment Control')
+    aba1, aba2 = st.tabs(['Equipment Control', 'Capacities'])
 
-        # Configuração do AgGrid
-        grid_options_builder = GridOptionsBuilder.from_dataframe(df)
-        grid_options_builder.configure_pagination(enabled=True)
-        
-        # Configuração da coluna Equipment com dropdown
-        equipment_options = ['R101', 'R102', 'R201', 'R202', 'R203', 'AP101', 'AP102', 'Filtro']
-        organization_options = ['Macaé','NSR']
-        grid_options_builder.configure_column("Equipment", cellEditor='agSelectCellEditor', cellEditorParams={'values': equipment_options}, editable=True)
-        grid_options_builder.configure_column("Organization", cellEditor='agSelectCellEditor', cellEditorParams={'values': organization_options}, editable=True)
-
-        grid_options = grid_options_builder.build()
-
-        grid_response = AgGrid(
-            df,
-            gridOptions=grid_options,
-            enable_enterprise_modules=True,
-            update_mode=GridUpdateMode.MODEL_CHANGED,
-            fit_columns_on_grid_load=True,
-            height=600,
-            width='150%'
-        )
-
-        updated_df = pd.DataFrame(grid_response['data'])
-
-        if st.button('Save Changes to Database'):
-            for idx, row in updated_df.iterrows():
-                sql = "UPDATE Equipments SET Equipment = ?, Organization = ? WHERE Resources = ?"
-                params = (row['Equipment'], row['Organization'], row['Resources'])
-                with engine.begin() as conn:
-                    conn.execute(sql, params)
-            st.success('Changes saved successfully!')
+    with aba1:
+        if not df.empty:
+            st.title('Equipment Control')
+            grid_options_builder = GridOptionsBuilder.from_dataframe(df)
+            grid_options_builder.configure_pagination(enabled=True)
+            equipment_options = df2['Equipment'].unique().tolist()  
+            organization_options = ['Macaé', 'NSR']
+            grid_options_builder.configure_column("Equipment", cellEditor='agSelectCellEditor', cellEditorParams={'values': equipment_options}, editable=True)
+            grid_options_builder.configure_column("Organization", cellEditor='agSelectCellEditor', cellEditorParams={'values': organization_options}, editable=True)
+            grid_options = grid_options_builder.build()
+            grid_response = AgGrid(
+                df,
+                gridOptions=grid_options,
+                enable_enterprise_modules=True,
+                update_mode=GridUpdateMode.MODEL_CHANGED,
+                fit_columns_on_grid_load=True,
+                height=500,
+                width='100%'
+            )
+            updated_df = pd.DataFrame(grid_response['data'])
+            if st.button('Save Equipment Changes'):
+                for idx, row in updated_df.iterrows():
+                    sql = "UPDATE Equipments SET Equipment = ?, Organization = ? WHERE Resources = ?"
+                    params = (row['Equipment'], row['Organization'], row['Resources'])
+                    with engine.begin() as conn:
+                        conn.execute(sql, params)
+                st.success('Equipment changes saved successfully!')
         else:
-            st.write("No changes to save.")
-    else:
-        st.write("No data found.")
+            st.write("No equipment data found.")
+
+    with aba2:
+        if not df2.empty:
+            st.title('Capacities')
+            grid_options_builder = GridOptionsBuilder.from_dataframe(df2)
+            grid_options_builder.configure_pagination(enabled=True)
+            grid_options_builder.configure_column("Equipment", editable=True)
+            grid_options_builder.configure_column("Ideal Production Rate", editable=True)
+            grid_options_builder.configure_column("Hours Available per Day", editable=True)
+            grid_options_builder.configure_column("Hours of Scheduled Shutdowns per Month", editable=True)
+            grid_options_builder.configure_column("Capacities", editable=False)
+            grid_options = grid_options_builder.build()
+            grid_response = AgGrid(
+                df2,
+                gridOptions=grid_options,
+                enable_enterprise_modules=True,
+                update_mode=GridUpdateMode.MODEL_CHANGED,
+                fit_columns_on_grid_load=True,
+                height=500,
+                width='100%'
+            )
+            updated_df2 = pd.DataFrame(grid_response['data'])
+            if st.button('Save Capacity Changes'):
+                for idx, row in updated_df2.iterrows():
+                    sql = "UPDATE Capacities SET Ideal_production_rate = ?, Hours_available_per_day = ?, Hours_scheduled_shutdowns_month = ? WHERE Equipment = ?"
+                    params = (row['Ideal_production_rate'], row['Hours_available_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
+                    with engine.begin() as conn:
+                        conn.execute(sql, params)
+                st.success('Capacity changes saved successfully!')
+        else:
+            st.write("No capacity data found.")
 
 
+        
 
 
 
