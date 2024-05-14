@@ -19,8 +19,7 @@ engine = init_connection()
 def run_query(query):
     return pd.read_sql_query(query, engine)
 
-st.set_page_config(
-    layout="wide")
+st.set_page_config(layout="wide")
 
 # Definição das credenciais para login
 USER = "admin"
@@ -44,7 +43,7 @@ if st.sidebar.button("Login"):
         st.sidebar.error("Incorrect Username or Password")
 
 def calculate_capacity(df):
-    df['Capacity'] = df['Ideal_production_rate'] * ((df['Hours_avaliable_per_day'] * 30) - df['Hours_scheduled_shutdowns_month'])
+    df['Capacity'] = df['Ideal_production_rate'] * ((df['Hours_available_per_day'] * 30) - df['Hours_scheduled_shutdowns_month'])
     return df
 
 # Restante da aplicação após login
@@ -97,7 +96,7 @@ if st.session_state['logged_in']:
             grid_options_builder.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True, hide=True)
             grid_options_builder.configure_column("Equipment", hide=False, editable=True, headerName="Equipment")
             grid_options_builder.configure_column("Ideal_production_rate", hide=False, editable=True, headerName="Ideal Production Rate (kg/day)")
-            grid_options_builder.configure_column("Hours_avaliable_per_day", hide=False, editable=True, headerName="Avaliable Time (Hours/day)")
+            grid_options_builder.configure_column("Hours_available_per_day", hide=False, editable=True, headerName="Avaliable Time (Hours/day)")
             grid_options_builder.configure_column("Hours_scheduled_shutdowns_month", hide=False, editable=True, headerName="Scheduled Shutdowns (Hours/Month)")
             grid_options_builder.configure_column("Capacity", hide=False, editable=False, headerName="Capacity (kg/month)")
 
@@ -125,12 +124,13 @@ if st.session_state['logged_in']:
             if st.button('Save Capacity Changes'):
                 for idx, row in updated_df2.iterrows():
                     sql = "UPDATE Capacities SET Ideal_production_rate = ?, Hours_available_per_day = ?, Hours_scheduled_shutdowns_month = ? WHERE Equipment = ?"
-                    params = (row['Ideal_production_rate'], row['Hours_avaliable_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
+                    params = (row['Ideal_production_rate'], row['Hours_available_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
                     with engine.begin() as conn:
                         conn.execute(sql, params)
                 st.success('Capacity changes saved successfully!')
         else:
             st.write("No capacity data found.")
+
 
 
 
