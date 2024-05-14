@@ -124,15 +124,17 @@ if st.session_state['logged_in']:
             updated_df2 = calculate_capacity(updated_df2)
 
             # Atualizar o grid para exibir os valores recalculados
-            grid_response = AgGrid(
-                updated_df2,
-                gridOptions=grid_options,
-                enable_enterprise_modules=True,
-                update_mode=GridUpdateMode.NO_UPDATE,
-                fit_columns_on_grid_load=True,
-                height=500,
-                width='100%'
-            )
+            # Aqui usamos um if para só mostrar o grid atualizado se houver edições
+            if not updated_df2.equals(df2):
+                AgGrid(
+                    updated_df2,
+                    gridOptions=grid_options,
+                    enable_enterprise_modules=True,
+                    update_mode=GridUpdateMode.NO_UPDATE,
+                    fit_columns_on_grid_load=True,
+                    height=500,
+                    width='100%'
+                )
 
             if st.button('Save Capacity Changes'):
                 for idx, row in updated_df2.iterrows():
@@ -143,6 +145,7 @@ if st.session_state['logged_in']:
                 st.success('Capacity changes saved successfully!')
         else:
             st.write("No capacity data found.")
+
 
 
 
