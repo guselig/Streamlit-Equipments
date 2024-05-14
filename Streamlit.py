@@ -106,7 +106,6 @@ if st.session_state['logged_in']:
                 update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
                 domLayout='autoHeight',  # Ajustando a altura automaticamente
-                height=None,
                 width='100%'  # Ajustando a largura automaticamente
             )
 
