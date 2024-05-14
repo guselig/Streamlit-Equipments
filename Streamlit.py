@@ -43,6 +43,10 @@ if st.sidebar.button("Login"):
         st.sidebar.error("Incorrect Username or Password")
 
 def calculate_capacity(df):
+    # Convertendo colunas para numérico e preenchendo valores nulos com 0
+    df['Ideal_production_rate'] = pd.to_numeric(df['Ideal_production_rate'], errors='coerce').fillna(0)
+    df['Hours_available_per_day'] = pd.to_numeric(df['Hours_available_per_day'], errors='coerce').fillna(0)
+    df['Hours_scheduled_shutdowns_month'] = pd.to_numeric(df['Hours_scheduled_shutdowns_month'], errors='coerce').fillna(0)
     df['Capacity'] = df['Ideal_production_rate'] * ((df['Hours_available_per_day'] * 30) - df['Hours_scheduled_shutdowns_month'])
     return df
 
@@ -130,6 +134,7 @@ if st.session_state['logged_in']:
                 st.success('Capacity changes saved successfully!')
         else:
             st.write("No capacity data found.")
+
 
 
 
