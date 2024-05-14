@@ -66,7 +66,7 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.MODEL_CHANGED,
                 fit_columns_on_grid_load=True,
-                height = 500,
+                height = 480,
                 width='100%'
             )
             updated_df = pd.DataFrame(grid_response['data'])
@@ -103,8 +103,8 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
-                height = 295,
-                width='50%'  # Ajustando a largura automaticamente
+                height = 285,
+                width='100%'  # Ajustando a largura automaticamente
             )
 
             updated_df2 = pd.DataFrame(grid_response['data'])
