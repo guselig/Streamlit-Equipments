@@ -40,7 +40,6 @@ if st.sidebar.button("Login"):
     else:
         st.sidebar.error("Incorrect Username or Password")
 
-
 # Restante da aplicação após login
 if st.session_state['logged_in']:
     df = run_query("SELECT * FROM Equipments;")
@@ -66,7 +65,7 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.MODEL_CHANGED,
                 fit_columns_on_grid_load=True,
-                height = 480,
+                height=480,
                 width='100%'
             )
             updated_df = pd.DataFrame(grid_response['data'])
@@ -103,7 +102,7 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
-                height = 285,
+                height=285,
                 width='100%'  # Ajustando a largura automaticamente
             )
 
