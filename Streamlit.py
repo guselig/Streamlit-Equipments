@@ -16,6 +16,7 @@ def init_connection():
 engine = init_connection()
 
 # Função para executar queries
+@st.cache_data(ttl=600)  # cache por 10 minutos
 def run_query(query):
     return pd.read_sql_query(query, engine)
 
@@ -100,7 +101,6 @@ if st.session_state['logged_in']:
                 df2,
                 gridOptions=grid_options,
                 enable_enterprise_modules=True,
-                update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
                 height=285,
                 width='100%'  # Ajustando a largura automaticamente
