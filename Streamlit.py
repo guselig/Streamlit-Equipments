@@ -115,7 +115,6 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
-                data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
                 height=500,
                 width='100%'
             )
