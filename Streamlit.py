@@ -105,9 +105,12 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
-                height = None,
-                width=None
+                domLayout='autoHeight',  # Ajustando a altura automaticamente
+                height=None,
+                width='100%'  # Ajustando a largura automaticamente
             )
+
+            updated_df2 = pd.DataFrame(grid_response['data'])
 
             if st.button('Save Capacity Changes'):
                 for idx, row in updated_df2.iterrows():
