@@ -68,8 +68,8 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.MODEL_CHANGED,
                 fit_columns_on_grid_load=True,
-                height = None,
-                width=None
+                height = 550,
+                width=100%
             )
             updated_df = pd.DataFrame(grid_response['data'])
             if st.button('Save Equipment Changes'):
@@ -105,7 +105,7 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
-                domLayout='autoHeight',  # Ajustando a altura automaticamente
+                height = 300,
                 width='100%'  # Ajustando a largura automaticamente
             )
 
