@@ -83,10 +83,24 @@ if st.session_state['logged_in']:
     with aba2:
         if not df2.empty:
             st.title('Capacities')
+
+            # Configurando o GridOptionsBuilder a partir do DataFrame
             grid_options_builder = GridOptionsBuilder.from_dataframe(df2)
+
+            # Configuração para exibir apenas a coluna 'Capacity' com o nome personalizado
+            grid_options_builder.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True, hide=True)
+            grid_options_builder.configure_column("Ideal_production_rate", hide=False, editable=True, headerName="Ideal Production Rate (kg/day)")
+            grid_options_builder.configure_column("Hours_avaliable_per_day", hide=False, editable=True, headerName="Avaliable Time (Hours/day)")
+            grid_options_builder.configure_column("Hours_scheduled_shutdowns_month", hide=False, editable=True, headerName="Scheduled Shutdowns (Hours/Month)")
+            grid_options_builder.configure_column("Capacity", hide=False, editable=False, headerName="Capacity (kg/month)")
+
+            # Habilitando a paginação
             grid_options_builder.configure_pagination(enabled=True)
-            grid_options_builder.configure_column("Capacity", editable=False)
+
+            # Construindo as opções do grid
             grid_options = grid_options_builder.build()
+
+            # Exibindo o AgGrid com as opções configuradas
             grid_response = AgGrid(
                 df2,
                 gridOptions=grid_options,
@@ -97,6 +111,7 @@ if st.session_state['logged_in']:
                 width='100%'
             )
             updated_df2 = pd.DataFrame(grid_response['data'])
+
             if st.button('Save Capacity Changes'):
                 for idx, row in updated_df2.iterrows():
                     sql = "UPDATE Capacities SET Ideal_production_rate = ?, Hours_available_per_day = ?, Hours_scheduled_shutdowns_month = ? WHERE Equipment = ?"
@@ -106,6 +121,7 @@ if st.session_state['logged_in']:
                 st.success('Capacity changes saved successfully!')
         else:
             st.write("No capacity data found.")
+
 
 
         
