@@ -19,8 +19,6 @@ engine = init_connection()
 def run_query(query):
     return pd.read_sql_query(query, engine)
 
-st.set_page_config(layout="wide")
-
 # Definição das credenciais para login
 USER = "admin"
 PASSWORD = "Dorf$"
@@ -68,7 +66,7 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.MODEL_CHANGED,
                 fit_columns_on_grid_load=True,
-                height = 550,
+                height = 500,
                 width='100%'
             )
             updated_df = pd.DataFrame(grid_response['data'])
@@ -105,7 +103,7 @@ if st.session_state['logged_in']:
                 enable_enterprise_modules=True,
                 update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
-                height = 300,
+                height = 295,
                 width='100%'  # Ajustando a largura automaticamente
             )
 
