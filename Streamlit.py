@@ -95,12 +95,10 @@ if st.session_state['logged_in']:
 
             # Configurando o GridOptionsBuilder a partir do DataFrame
             grid_options_builder = GridOptionsBuilder.from_dataframe(df2)
-
-            # Configuração para exibir apenas a coluna 'Capacity' com o nome personalizado
             grid_options_builder.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True, hide=True)
             grid_options_builder.configure_column("Equipment", hide=False, editable=True, headerName="Equipment")
             grid_options_builder.configure_column("Ideal_production_rate", hide=False, editable=True, headerName="Ideal Production Rate (kg/day)")
-            grid_options_builder.configure_column("Hours_available_per_day", hide=False, editable=True, headerName="Avaliable Time (Hours/day)")
+            grid_options_builder.configure_column("Hours_available_per_day", hide=False, editable=True, headerName="Available Time (Hours/day)")
             grid_options_builder.configure_column("Hours_scheduled_shutdowns_month", hide=False, editable=True, headerName="Scheduled Shutdowns (Hours/Month)")
             grid_options_builder.configure_column("Capacity", hide=False, editable=False, headerName="Capacity (kg/month)")
 
@@ -115,8 +113,9 @@ if st.session_state['logged_in']:
                 df2,
                 gridOptions=grid_options,
                 enable_enterprise_modules=True,
-                update_mode=GridUpdateMode.MODEL_CHANGED,
+                update_mode=GridUpdateMode.VALUE_CHANGED,
                 fit_columns_on_grid_load=True,
+                data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
                 height=500,
                 width='100%'
             )
@@ -124,6 +123,17 @@ if st.session_state['logged_in']:
 
             # Recalcular a coluna Capacity após qualquer edição
             updated_df2 = calculate_capacity(updated_df2)
+
+            # Atualizar o grid para exibir os valores recalculados
+            grid_response = AgGrid(
+                updated_df2,
+                gridOptions=grid_options,
+                enable_enterprise_modules=True,
+                update_mode=GridUpdateMode.NO_UPDATE,
+                fit_columns_on_grid_load=True,
+                height=500,
+                width='100%'
+            )
 
             if st.button('Save Capacity Changes'):
                 for idx, row in updated_df2.iterrows():
