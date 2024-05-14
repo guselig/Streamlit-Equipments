@@ -52,7 +52,7 @@ if st.session_state['logged_in']:
     df = run_query("SELECT * FROM Equipments;")
     df2 = run_query("SELECT * FROM Capacities;")
     df2 = pd.DataFrame(df2)
-    df2 = df2[['Equipment', 'Ideal_production_rate', 'Hours_avaliable_per_day', 'Hours_scheduled_shutdowns_month', 'Capacity']]
+    df2 = df2[['Equipment', 'Ideal_production_rate', 'Hours_available_per_day', 'Hours_scheduled_shutdowns_month', 'Capacity']]
 
     aba1, aba2 = st.tabs(['Equipment Control', 'Capacities'])
 
