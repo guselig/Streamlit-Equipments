@@ -89,6 +89,7 @@ if st.session_state['logged_in']:
 
             # Configuração para exibir apenas a coluna 'Capacity' com o nome personalizado
             grid_options_builder.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True, hide=True)
+            grid_options_builder.configure_column("Equipment", hide=False, editable=True, headerName="Equipment")
             grid_options_builder.configure_column("Ideal_production_rate", hide=False, editable=True, headerName="Ideal Production Rate (kg/day)")
             grid_options_builder.configure_column("Hours_avaliable_per_day", hide=False, editable=True, headerName="Avaliable Time (Hours/day)")
             grid_options_builder.configure_column("Hours_scheduled_shutdowns_month", hide=False, editable=True, headerName="Scheduled Shutdowns (Hours/Month)")
