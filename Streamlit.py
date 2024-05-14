@@ -19,6 +19,9 @@ engine = init_connection()
 def run_query(query):
     return pd.read_sql_query(query, engine)
 
+st.set_page_config(
+    layout="wide")
+
 # Definição das credenciais para login
 USER = "admin"
 PASSWORD = "Dorf$"
@@ -82,11 +85,7 @@ if st.session_state['logged_in']:
             st.title('Capacities')
             grid_options_builder = GridOptionsBuilder.from_dataframe(df2)
             grid_options_builder.configure_pagination(enabled=True)
-            grid_options_builder.configure_column("Equipment", editable=True)
-            grid_options_builder.configure_column("Ideal Production Rate", editable=True)
-            grid_options_builder.configure_column("Hours Available per Day", editable=True)
-            grid_options_builder.configure_column("Hours of Scheduled Shutdowns per Month", editable=True)
-            grid_options_builder.configure_column("Capacities", editable=False)
+            grid_options_builder.configure_column("Capacity", editable=False)
             grid_options = grid_options_builder.build()
             grid_response = AgGrid(
                 df2,
