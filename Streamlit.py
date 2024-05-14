@@ -43,10 +43,15 @@ if st.sidebar.button("Login"):
     else:
         st.sidebar.error("Incorrect Username or Password")
 
+def calculate_capacity(df):
+    df['Capacity'] = df['Ideal_production_rate'] * ((df['Hours_avaliable_per_day'] * 30) - df['Hours_scheduled_shutdowns_month'])
+    return df
+
 # Restante da aplicação após login
 if st.session_state['logged_in']:
     df = run_query("SELECT * FROM Equipments;")
     df2 = run_query("SELECT * FROM Capacities;")
+    df2 = df2[['Equipment', 'Ideal_production_rate', 'Hours_avaliable_per_day', 'Hours_scheduled_shutdowns_month', 'Capacity']]
 
     aba1, aba2 = st.tabs(['Equipment Control', 'Capacities'])
 
@@ -113,10 +118,13 @@ if st.session_state['logged_in']:
             )
             updated_df2 = pd.DataFrame(grid_response['data'])
 
+            # Recalcular a coluna Capacity após qualquer edição
+            updated_df2 = calculate_capacity(updated_df2)
+
             if st.button('Save Capacity Changes'):
                 for idx, row in updated_df2.iterrows():
                     sql = "UPDATE Capacities SET Ideal_production_rate = ?, Hours_available_per_day = ?, Hours_scheduled_shutdowns_month = ? WHERE Equipment = ?"
-                    params = (row['Ideal_production_rate'], row['Hours_available_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
+                    params = (row['Ideal_production_rate'], row['Hours_avaliable_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
                     with engine.begin() as conn:
                         conn.execute(sql, params)
                 st.success('Capacity changes saved successfully!')
