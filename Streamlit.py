@@ -107,7 +107,7 @@ if st.session_state['logged_in']:
                 fit_columns_on_grid_load=True,
                 height=500,
                 width='100%'
-            ))
+            )
 
             if st.button('Save Capacity Changes'):
                 for idx, row in updated_df2.iterrows():
