@@ -69,7 +69,7 @@ if st.session_state['logged_in']:
                 update_mode=GridUpdateMode.MODEL_CHANGED,
                 fit_columns_on_grid_load=True,
                 height = 550,
-                width=100%
+                width='100%'
             )
             updated_df = pd.DataFrame(grid_response['data'])
             if st.button('Save Equipment Changes'):
