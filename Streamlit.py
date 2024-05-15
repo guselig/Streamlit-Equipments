@@ -70,15 +70,6 @@ if st.session_state['logged_in']:
                 width='100%'
             )
             updated_df = pd.DataFrame(grid_response['data'])
-            if st.button('Save Equipment Changes'):
-                for idx, row in updated_df.iterrows():
-                    sql = "UPDATE Equipments SET Equipment = ?, Organization = ? WHERE Resources = ?"
-                    params = (row['Equipment'], row['Organization'], row['Resources'])
-                    with engine.begin() as conn:
-                        conn.execute(sql, params)
-                st.success('Equipment changes saved successfully!')
-        else:
-            st.write("No equipment data found.")
 
     with aba2:
         if not df2.empty:
@@ -102,21 +93,13 @@ if st.session_state['logged_in']:
                 gridOptions=grid_options,
                 enable_enterprise_modules=True,
                 fit_columns_on_grid_load=True,
-                height=285,
-                width='100%'  # Ajustando a largura automaticamente
+                height=275,
+                width= 50  # Ajustando a largura automaticamente
             )
 
             updated_df2 = pd.DataFrame(grid_response['data'])
 
-            if st.button('Save Capacity Changes'):
-                for idx, row in updated_df2.iterrows():
-                    sql = "UPDATE Capacities SET Ideal_production_rate = ?, Hours_available_per_day = ?, Hours_scheduled_shutdowns_month = ? WHERE Equipment = ?"
-                    params = (row['Ideal_production_rate'], row['Hours_available_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
-                    with engine.begin() as conn:
-                        conn.execute(sql, params)
-                st.success('Capacity changes saved successfully!')
-        else:
-            st.write("No capacity data found.")
+
 
 
 
