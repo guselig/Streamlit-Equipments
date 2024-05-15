@@ -111,8 +111,8 @@ if st.session_state['logged_in']:
             
             if st.button('Save Capacity Changes'):
                     for idx, row in updated_df2.iterrows():
-                        sql = "UPDATE Capacities SET Ideal_production_rate = ?, Hours_available_per_day = ?, Hours_scheduled_shutdowns_month = ? WHERE Equipment = ?"
-                        params = (row['Capacity'],row['Ideal_production_rate'], row['Hours_available_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
+                        sql = "UPDATE Capacities SET Capacity = ?, Hours_available_per_day = ?, Hours_scheduled_shutdowns_month = ? WHERE Equipment = ?"
+                        params = (row['Capacity'], row['Hours_available_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
                         with engine.begin() as conn:
                             conn.execute(sql, params)
                     st.success('Capacity changes saved successfully!')
