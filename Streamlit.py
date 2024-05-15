@@ -89,7 +89,7 @@ if st.session_state['logged_in']:
             grid_options_builder = GridOptionsBuilder.from_dataframe(df2)
             grid_options_builder.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True, hide=True)
             grid_options_builder.configure_column("Equipment", hide=False, editable=False, headerName="Equipment")
-            grid_options_builder.configure_column("Capacity", hide=False, editable=True, headerName="Capacity (kg/month)")
+            grid_options_builder.configure_column("Capacity", hide=False, editable=True, headerName="Capacity (kg/day)")
 
             # Habilitando a paginação
             grid_options_builder.configure_pagination(enabled=True)
