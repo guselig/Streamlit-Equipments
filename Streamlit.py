@@ -103,7 +103,7 @@ if st.session_state['logged_in']:
                 gridOptions=grid_options,
                 enable_enterprise_modules=True,
                 fit_columns_on_grid_load=True,
-                height=270,
+                height=330,
                 width= '100%'  # Ajustando a largura automaticamente
             )
 
