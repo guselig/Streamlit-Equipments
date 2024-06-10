@@ -16,8 +16,8 @@ def init_connection():
 engine = init_connection()
 
 # Função para executar queries
-@st.cache_data(ttl=10)  # cache por 10 seg
-def run_query(query):
+@st.cache_data(ttl=10)  # cache por 10 minutos
+def load_data(query):
     return pd.read_sql_query(query, engine)
 
 # Definição das credenciais para login
@@ -43,8 +43,8 @@ if st.sidebar.button("Login"):
 
 # Restante da aplicação após login
 if st.session_state['logged_in']:
-    df = run_query("SELECT * FROM Equipments;")
-    df2 = run_query("SELECT * FROM Capacities;")
+    df = load_data("SELECT * FROM Equipments;")
+    df2 = load_data("SELECT * FROM Capacities;")
     df2 = pd.DataFrame(df2)
     df2 = df2[['Equipment', 'Ideal_production_rate', 'Hours_available_per_day', 'Hours_scheduled_shutdowns_month', 'Capacity']]
 
@@ -64,7 +64,7 @@ if st.session_state['logged_in']:
                 df,
                 gridOptions=grid_options,
                 enable_enterprise_modules=True,
-                update_mode=GridUpdateMode.NO_UPDATE,
+                update_mode=GridUpdateMode.NO_UPDATE,  # Avoid updating the grid automatically
                 fit_columns_on_grid_load=True,
                 height=550,
                 width='100%'
@@ -83,6 +83,7 @@ if st.session_state['logged_in']:
             st.write("No equipment data found.")
 else:
     st.sidebar.warning("Please log in to view the application.")
+
 
 
 
