@@ -64,9 +64,9 @@ if st.session_state['logged_in']:
                 df,
                 gridOptions=grid_options,
                 enable_enterprise_modules=True,
-                update_mode=GridUpdateMode.MODEL_CHANGED,
+                update_mode=GridUpdateMode.NO_UPDATE,
                 fit_columns_on_grid_load=True,
-                height=500,
+                height=550,
                 width='100%'
             )
             updated_df = pd.DataFrame(grid_response['data'])
