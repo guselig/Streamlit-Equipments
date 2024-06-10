@@ -16,7 +16,7 @@ def init_connection():
 engine = init_connection()
 
 # Função para executar queries
-@st.cache_data(ttl=10)  # cache por 10 minutos
+@st.cache_data(ttl=600)  # cache por 10 minutos
 def load_data(query):
     return pd.read_sql_query(query, engine)
 
@@ -64,7 +64,7 @@ if st.session_state['logged_in']:
                 df,
                 gridOptions=grid_options,
                 enable_enterprise_modules=True,
-                update_mode=GridUpdateMode.NO_UPDATE,  # Avoid updating the grid automatically
+                update_mode=GridUpdateMode.MANUAL,  # Avoid updating the grid automatically
                 fit_columns_on_grid_load=True,
                 height=550,
                 width='100%'
@@ -78,6 +78,7 @@ if st.session_state['logged_in']:
                     with engine.begin() as conn:
                         conn.execute(sql, params)
                 st.cache_data.clear()  # Clear cache after saving changes
+                st.experimental_rerun()  # Recarregar a página para atualizar os dados exibidos
                 st.success('Equipment changes saved successfully!')
         else:
             st.write("No equipment data found.")
