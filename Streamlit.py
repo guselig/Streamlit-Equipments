@@ -16,7 +16,7 @@ def init_connection():
 engine = init_connection()
 
 # Função para executar queries
-@st.cache_data(ttl=600)  # cache por 10 minutos
+@st.cache_data(ttl=10)  # cache por 10 minutos
 def run_query(query):
     return pd.read_sql_query(query, engine)
 
