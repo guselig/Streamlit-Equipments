@@ -16,7 +16,7 @@ def init_connection():
 engine = init_connection()
 
 # Função para executar queries
-@st.cache_data(ttl=10)  # cache por 10 minutos
+@st.cache_data(ttl=10)  # cache por 10 seg
 def run_query(query):
     return pd.read_sql_query(query, engine)
 
@@ -77,47 +77,13 @@ if st.session_state['logged_in']:
                     params = (row['Equipment'], row['Organization'], row['Resources'])
                     with engine.begin() as conn:
                         conn.execute(sql, params)
+                st.cache_data.clear()  # Clear cache after saving changes
                 st.success('Equipment changes saved successfully!')
         else:
-            st.write("No equipment data found.")          
+            st.write("No equipment data found.")
+else:
+    st.sidebar.warning("Please log in to view the application.")
 
-    with aba2:
-        if not df2.empty:
-            st.title('Capacities')
-
-            # Configurando o GridOptionsBuilder a partir do DataFrame
-            grid_options_builder = GridOptionsBuilder.from_dataframe(df2)
-            grid_options_builder.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True, hide=True)
-            grid_options_builder.configure_column("Equipment", hide=False, editable=False, headerName="Equipment")
-            grid_options_builder.configure_column("Capacity", hide=False, editable=True, headerName="Capacity (kg/day)")
-
-            # Habilitando a paginação
-            grid_options_builder.configure_pagination(enabled=True)
-
-            # Construindo as opções do grid
-            grid_options = grid_options_builder.build()
-
-            # Exibindo o AgGrid com as opções configuradas
-            grid_response = AgGrid(
-                df2,
-                gridOptions=grid_options,
-                enable_enterprise_modules=True,
-                fit_columns_on_grid_load=True,
-                height=450,
-                width= '100%'  # Ajustando a largura automaticamente
-            )
-
-            updated_df2 = pd.DataFrame(grid_response['data'])
-            
-            if st.button('Save Capacity Changes'):
-                    for idx, row in updated_df2.iterrows():
-                        sql = "UPDATE Capacities SET Capacity = ?, Hours_available_per_day = ?, Hours_scheduled_shutdowns_month = ? WHERE Equipment = ?"
-                        params = (row['Capacity'], row['Hours_available_per_day'], row['Hours_scheduled_shutdowns_month'], row['Equipment'])
-                        with engine.begin() as conn:
-                            conn.execute(sql, params)
-                    st.success('Capacity changes saved successfully!')
-        else:
-            st.write("No capacity data found.")
 
 
 
