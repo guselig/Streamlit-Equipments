@@ -16,8 +16,8 @@ def init_connection():
 engine = init_connection()
 
 # Função para executar queries
-@st.cache_data(ttl=600)  # cache por 10 minutos
-def load_data(query):
+@st.cache_data(ttl=10)  # cache por 10 seg
+def run_query(query):
     return pd.read_sql_query(query, engine)
 
 # Definição das credenciais para login
@@ -43,8 +43,8 @@ if st.sidebar.button("Login"):
 
 # Restante da aplicação após login
 if st.session_state['logged_in']:
-    df = load_data("SELECT * FROM Equipments;")
-    df2 = load_data("SELECT * FROM Capacities;")
+    df = run_query("SELECT * FROM Equipments;")
+    df2 = run_query("SELECT * FROM Capacities;")
     df2 = pd.DataFrame(df2)
     df2 = df2[['Equipment', 'Ideal_production_rate', 'Hours_available_per_day', 'Hours_scheduled_shutdowns_month', 'Capacity']]
 
@@ -64,7 +64,7 @@ if st.session_state['logged_in']:
                 df,
                 gridOptions=grid_options,
                 enable_enterprise_modules=True,
-                update_mode=GridUpdateMode.MANUAL,  # Avoid updating the grid automatically
+                update_mode=GridUpdateMode.MODEL_CHANGED,
                 fit_columns_on_grid_load=True,
                 height=550,
                 width='100%'
@@ -78,7 +78,6 @@ if st.session_state['logged_in']:
                     with engine.begin() as conn:
                         conn.execute(sql, params)
                 st.cache_data.clear()  # Clear cache after saving changes
-                st.experimental_rerun()  # Recarregar a página para atualizar os dados exibidos
                 st.success('Equipment changes saved successfully!')
         else:
             st.write("No equipment data found.")
