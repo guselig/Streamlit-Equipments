@@ -1,5 +1,6 @@
-pandas==1.5.3
+pandas==2.0.3
 pymssql==2.3.0
 streamlit-aggrid==1.0.5
 pyodbc==4.0.34
 sqlalchemy==1.4.39
+numpy==1.24.3
