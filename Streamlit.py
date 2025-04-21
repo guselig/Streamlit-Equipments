@@ -21,8 +21,8 @@ def run_query(query):
     return pd.read_sql_query(query, engine)
 
 # Definição das credenciais para login
-USER = "admin"
-PASSWORD = "Dorf$"
+USER = st.secrets["user"]
+PASSWORD = st.secrets["password"]
 
 # Verificação das credenciais
 def check_login(username, password):
